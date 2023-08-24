@@ -25,7 +25,7 @@ const SearchBar = ({ onChange }: Props) => {
     resolver: zodResolver(ArticleOptionsValidation),
     defaultValues: {
       search: '',
-      sortBy: 'ASC',
+      sortBy: 'Desc',
       category: ''
     }
   });
@@ -45,7 +45,7 @@ const SearchBar = ({ onChange }: Props) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           autoComplete={'off'}
-          className="flex flex-col gap-5"
+          className="flex flex-col gap-10"
         >
           <div className={'flex md:flex-row items-center gap-10 flex-col'}>
             <FormField
@@ -53,11 +53,11 @@ const SearchBar = ({ onChange }: Props) => {
               name="search"
               render={({ field }) => (
                 <FormItem className={'flex flex-col w-full gap-3'}>
-                  <FormLabel className={'text-base-semibold text-light-2'}>Search</FormLabel>
+                  <FormLabel className={'text-base-semibold text-light-2'}>Пошук</FormLabel>
                   <FormControl>
                     <Input
                       type={'text'}
-                      placeholder={'This is search input.'}
+                      placeholder={'Пошук за назвої або контентом'}
                       className={'account-form_input no-focus'}
                       {...field}
                     />
@@ -71,11 +71,11 @@ const SearchBar = ({ onChange }: Props) => {
               name="category"
               render={({ field }) => (
                 <FormItem className={'flex flex-col w-full gap-3'}>
-                  <FormLabel className={'text-base-semibold text-light-2'}>Category</FormLabel>
+                  <FormLabel className={'text-base-semibold text-light-2'}>Категорія</FormLabel>
                   <FormControl>
                     <Input
                       type={'text'}
-                      placeholder={'This is category of article.'}
+                      placeholder={'Категорія новини'}
                       className={'account-form_input no-focus'}
                       {...field}
                     />
@@ -89,19 +89,22 @@ const SearchBar = ({ onChange }: Props) => {
               name="sortBy"
               render={({ field }) => (
                 <FormItem className={'flex flex-col w-full gap-3'}>
-                  <FormLabel className={'text-base-semibold text-light-2'}></FormLabel>
+                  <FormLabel className={'text-base-semibold text-light-2'}>
+                    Сортування за датою
+                  </FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={form.getValues().sortBy}
+                      className={'flex items-center justify-evenly'}
                     >
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="ASC" id="ASC" />
-                        <Label htmlFor="option-one">ASC</Label>
+                        <RadioGroupItem value="DESC" id="DESC" />
+                        <Label htmlFor="option-two">Спочатку нові</Label>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="DESC" id="DESC" />
-                        <Label htmlFor="option-two">DESC</Label>
+                        <RadioGroupItem value="ASC" id="ASC" />
+                        <Label htmlFor="option-one">Спочатку старі</Label>
                       </div>
                     </RadioGroup>
                   </FormControl>
@@ -117,7 +120,7 @@ const SearchBar = ({ onChange }: Props) => {
               disabled={form.formState.isSubmitting}
               className={'bg-primary-500 w-[60%] md:w-[20%]'}
             >
-              Search
+              Знайти
             </Button>
           </div>
         </form>

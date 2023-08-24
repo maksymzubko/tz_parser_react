@@ -31,6 +31,12 @@ const Article = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
+  const fixLinks = (str: string) => {
+    const fixed = str.replaceAll('/static/', 'https://www.rbc.ua/static/');
+    const removeFirst = fixed.replace(/\s*(<p>)/g, '$1');
+    return removeFirst.replace(/(<\/p>)\s*/g, '$1');
+  };
+
   if (loading)
     return (
       <div
@@ -56,12 +62,6 @@ const Article = () => {
         <span className="sr-only">Loading...</span>
       </div>
     );
-
-  const fixLinks = (str: string) => {
-    const fixed = str.replaceAll('/static/', 'https://www.rbc.ua/static/');
-    const removeFirst = fixed.replace(/\s*(<p>)/g, '$1');
-    return removeFirst.replace(/(<\/p>)\s*/g, '$1');
-  };
 
   if (article)
     return (
