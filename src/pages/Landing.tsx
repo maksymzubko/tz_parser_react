@@ -11,6 +11,7 @@ import {
     AccordionTrigger
 } from '@/components/ui/accordion.tsx';
 import Pagination from "@/components/shared/Pagination.tsx";
+import Loader from "@/components/shared/Loader.tsx";
 
 const Landing = () => {
     const [loading, setLoading] = useState(false)
@@ -40,7 +41,6 @@ const Landing = () => {
         articlesApi
             .getArticles(options)
             .then((res) => {
-                console.log(res);
                 setArticles(res);
                 setTimeout(() => {
                     scroll({top: 0, behavior: 'smooth'})
@@ -94,9 +94,13 @@ const Landing = () => {
                 </AccordionItem>
             </Accordion>
 
-            <section className={'flex flex-wrap gap-4 w-full justify-center'}>
+            {loading && <div className={"fixed top-1/2 left-1/2"}>
+                <Loader/>
+            </div>}
+
+            <section className={`${loading ? 'invisible' : 'visible'} transition ease-in flex flex-wrap gap-4 w-full justify-center`}>
                 {articles?.data?.length > 0 ? (
-                    articles.data.map((a) => <ArticleCard key={a.id} article={a}/>)
+                    articles.data.map((a) => <ArticleCard key={`article-card-${a.id}`} article={a}/>)
                 ) : (
                     <div className={'text-base-regular'}>No data found</div>
                 )}
