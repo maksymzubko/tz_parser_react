@@ -5,15 +5,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import { LoginValidation } from '@/lib/validations/login.ts';
-import { useState } from 'react';
 import Loader from '@/components/ui/Loader.tsx';
 import authApi from '@/api/auth/auth.api.ts';
 import { useToast } from '@/components/ui/use-toast.ts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setAuthorized } from '@/redux/store/user/slice.ts';
+import { AxiosError } from 'axios';
 
 const LoginForm = () => {
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const dispatch = useDispatch();
   const form = useForm({
@@ -24,16 +23,15 @@ const LoginForm = () => {
     }
   });
 
-  const onSubmit = async (values: zod.infer<typeof LoginValidation>) => {
-    setLoading(true);
+  const onSubmit = (values: zod.infer<typeof LoginValidation>) => {
     authApi
       .login({ username: values.username, password: values.password })
-      .then((res) => {
+      .then(() => {
         dispatch(setAuthorized({ isAuthorized: true }));
       })
-      .catch((err) => {
-        if (err.response) {
-          err.response.data.errors.forEach((d: any) => {
+      .catch((err: AxiosError<{ errors: { field: 'username' | 'password'; message: string }[] | undefined }>) => {
+        if (err.response && err.response.data.errors) {
+          err.response.data.errors.forEach((d) => {
             form.setError(d.field, { message: d.message });
           });
         } else {
@@ -44,14 +42,13 @@ const LoginForm = () => {
             variant: 'destructive'
           });
         }
-      })
-      .finally(() => setLoading(false));
+      });
   };
 
   return (
     <section className={'p-5 w-full bg-light-2 dark:bg-dark-4 max-w-[400px] rounded-2xl'}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
+        <form onSubmit={() => form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
           <FormField
             control={form.control}
             name="username"

@@ -23,7 +23,7 @@ const SearchBar = ({ onChange }: Props) => {
     }
   });
 
-  const onSubmit = async (values: zod.infer<typeof ArticleOptionsValidation>) => {
+  const onSubmit = (values: zod.infer<typeof ArticleOptionsValidation>) => {
     const { search, sortBy, category } = values;
     onChange({ search, order: sortBy === 'ASC' ? Order['ASC'] : Order['DESC'], category });
   };
@@ -31,7 +31,7 @@ const SearchBar = ({ onChange }: Props) => {
   return (
     <section className={'p-3 w-full bg-light-2 [&_label]:!text-dark-3 dark:[&_label]:!text-light-1 dark:bg-dark-3'}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
+        <form onSubmit={() => form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
           <div className={'flex md:flex-row items-center gap-10 flex-col'}>
             <FormField
               control={form.control}

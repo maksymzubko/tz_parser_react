@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { SelectIsAuthorized } from '@/redux/store/user/selector.ts';
 import { links } from '@/router.tsx';

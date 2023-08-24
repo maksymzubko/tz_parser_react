@@ -5,7 +5,7 @@ import ArticleCard from '@/components/cards/ArticleCard.tsx';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from '@/components/shared/Pagination.tsx';
 import Loader from '@/components/ui/Loader.tsx';
-import FilterAccordion from "@/components/ui/filter-accordion.tsx";
+import FilterAccordion from '@/components/ui/filter-accordion.tsx';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);

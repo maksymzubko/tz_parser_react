@@ -29,7 +29,7 @@ function App() {
           dispatch(setAuthorized({ isAuthorized: false }));
         });
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const onScroll = () => {

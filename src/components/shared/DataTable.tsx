@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Article } from '@/api/articles/types.ts';
 import { convertDateToString } from '@/lib/utils.ts';
-import { Delete, DeleteIcon, EditIcon, TrashIcon, ViewIcon } from 'lucide-react';
+import { EditIcon, TrashIcon, ViewIcon } from 'lucide-react';
 import NoImg from '@/assets/no-img.png';
 import { useNavigate } from 'react-router-dom';
 import { links } from '@/router.tsx';
 import YesNoDialog from '@/components/ui/yes-no-dialog.tsx';
 import articlesApi from '@/api/articles/articles.api.ts';
 import { useToast } from '@/components/ui/use-toast.ts';
+import { AxiosError } from 'axios';
 
 interface Props {
   data: Article[];
@@ -24,11 +25,11 @@ const DataTable = ({ data, onDeleted }: Props) => {
     articlesApi
       .deleteArticle(id)
       .then(() => onDeleted(id))
-      .catch((err) => {
-        if (err.response) {
+      .catch((err: AxiosError<{ errors: string[] | undefined }>) => {
+        if (err.response && err.response.data.errors) {
           toast({
             title: 'Помилка :(',
-            description: err.response.data.errors[0],
+            description: err.response.data.errors.at(0) ?? '',
             duration: 1500,
             variant: 'destructive'
           });
@@ -72,7 +73,7 @@ const DataTable = ({ data, onDeleted }: Props) => {
         <tbody>
           {data.length > 0 ? (
             data.map((d) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
+              <tr key={d.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                 <th
                   scope="row"
                   className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white w-[100px]"
@@ -108,8 +109,8 @@ const DataTable = ({ data, onDeleted }: Props) => {
                       title={'Ви впевнені?'}
                       onSubmit={() => onDelete(d.id)}
                       isActionLoading={loading}
-                      btnCancelName={"Відмінити"}
-                      btnActionName={"Видалити"}
+                      btnCancelName={'Відмінити'}
+                      btnActionName={'Видалити'}
                     >
                       <TrashIcon size={30} />
                     </YesNoDialog>

@@ -3,7 +3,10 @@ import agent from '../base';
 import { Login, LoginResponse } from './types';
 class AuthApi {
   async login(data: Login): Promise<LoginResponse | undefined> {
-    const response: AxiosResponse = await agent.post(`auth/login`, data);
+    const response: AxiosResponse<
+      LoginResponse,
+      { errors: { field: 'username' | 'password'; message: string }[] | undefined }
+    > = await agent.post(`auth/login`, data);
 
     if (response.status === 200 || response.status === 201) {
       const { id, email, access_token, uuid, name, avatar } = response.data;
@@ -18,7 +21,7 @@ class AuthApi {
   }
 
   async verifyToken(): Promise<boolean> {
-    const response: AxiosResponse = await agent.get(`auth/verify-token`);
+    const response: AxiosResponse<boolean> = await agent.get(`auth/verify-token`);
 
     if (response.status === 200 || response.status === 201) {
       return response.data;

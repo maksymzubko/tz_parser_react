@@ -1,4 +1,4 @@
-import {lazy, ReactChild, ReactComponentElement, ReactElement, Suspense} from 'react';
+import { lazy, Suspense } from 'react';
 import SuspenseLoader from './components/shared/SuspenseLoader.tsx';
 import { Navigate } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const Login = Loader(lazy(() => import('./pages/Login.tsx')));
 
 const AdminLayout = Loader(lazy(() => import('./layouts/Layout.tsx')));
 
-console.log(typeof AdminLanding, 'type')
+console.log(typeof AdminLanding, 'type');
 export const links = {
   landing: '/',
   article: '/article/',

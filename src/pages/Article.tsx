@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Article as ArticleType } from '@/api/articles/types.ts';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NoImg from '@/assets/no-img.png';
 import articlesApi from '@/api/articles/articles.api.ts';
-import moment from 'moment';
 import { convertDateToString } from '@/lib/utils.ts';
 import { Badge } from '@/components/ui/badge.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { links } from '@/router.tsx';
-import { Home, LucideHome } from 'lucide-react';
+import { Home } from 'lucide-react';
 import Loader from '@/components/ui/Loader.tsx';
 
 const Article = () => {
