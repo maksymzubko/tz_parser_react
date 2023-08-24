@@ -48,7 +48,14 @@ const LoginForm = () => {
   return (
     <section className={'p-5 w-full bg-light-2 dark:bg-dark-4 max-w-[400px] rounded-2xl'}>
       <Form {...form}>
-        <form onSubmit={() => form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
+        <form
+          onSubmit={(event) => {
+            form.handleSubmit(onSubmit);
+            event.preventDefault();
+          }}
+          autoComplete={'off'}
+          className="flex flex-col gap-10"
+        >
           <FormField
             control={form.control}
             name="username"
@@ -89,7 +96,7 @@ const LoginForm = () => {
           />
 
           <div className={'w-full flex items-end justify-center gap-4'}>
-            <Button type={'submit'} disabled={form.formState.isSubmitting} className={'bg-primary-500 w-[60%]'}>
+            <Button type={'submit'} disabled={form.formState.isSubmitting} className={'w-[60%]'}>
               {form.formState.isSubmitting ? <Loader /> : 'Увійти'}
             </Button>
           </div>

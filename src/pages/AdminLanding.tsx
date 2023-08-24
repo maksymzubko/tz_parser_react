@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '@/components/ui/Loader.tsx';
 import Pagination from '@/components/shared/Pagination.tsx';
 import { Order, PageArticles, PageOptions } from '@/api/articles/types.ts';
 import articlesApi from '@/api/articles/articles.api.ts';
 import DataTable from '@/components/shared/DataTable.tsx';
 import FilterAccordion from '@/components/ui/filter-accordion.tsx';
+import {useToast} from "@/components/ui/use-toast.ts";
 
 const AdminLanding = () => {
   const [loading, setLoading] = useState(true);
+  const {toast} = useToast();
   const [options, setOptions] = useState<PageOptions>({
     take: 10,
     page: 1,
@@ -40,7 +42,12 @@ const AdminLanding = () => {
         }, 100);
       })
       .catch((reason) => {
-        console.log(reason);
+        toast({
+          title: 'Помилка :(',
+          description: 'Щось пішло не так, спробуйте ще!',
+          duration: 1500,
+          variant: 'destructive'
+        });
       })
       .finally(() => setLoading(false));
   }, [options]);

@@ -1,6 +1,6 @@
 import './App.css';
 import { useRoutes } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { routes } from './router.tsx';
 import { useDispatch } from 'react-redux';
 import { setAuthorized } from '@/redux/store/user/slice.ts';
@@ -10,14 +10,17 @@ import TopBar from '@/components/shared/TopBar.tsx';
 import Footer from '@/components/shared/Footer.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Toaster } from '@/components/ui/toaster.tsx';
+import Loader from '@/components/ui/Loader.tsx';
 
 function App() {
   const toTopBtn = useRef<HTMLButtonElement>();
 
+  const [loading, setLoading] = useState(true);
   const route = useRoutes(routes);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    setLoading(true);
     const token = Cookies.get('access_token_tz_demo');
     if (token) {
       authApi
@@ -27,7 +30,8 @@ function App() {
         })
         .catch(() => {
           dispatch(setAuthorized({ isAuthorized: false }));
-        });
+        })
+        .finally(() => setLoading(false));
     }
   }, [dispatch]);
 
@@ -57,7 +61,8 @@ function App() {
   return (
     <div className={'dark:bg-dark-3 h-auto w-full text-black dark:text-light-1'}>
       <TopBar />
-      {route}
+      {loading && <Loader />}
+      {!loading && route}
       <Button
         ref={toTopBtn}
         id="to-top-button"

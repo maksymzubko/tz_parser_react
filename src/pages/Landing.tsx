@@ -6,9 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 import Pagination from '@/components/shared/Pagination.tsx';
 import Loader from '@/components/ui/Loader.tsx';
 import FilterAccordion from '@/components/ui/filter-accordion.tsx';
+import {useToast} from "@/components/ui/use-toast.ts";
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
+  const {toast} = useToast();
   const [options, setOptions] = useState<PageOptions>({
     take: 10,
     page: 1,
@@ -41,7 +43,12 @@ const Landing = () => {
         }, 100);
       })
       .catch((reason) => {
-        console.log(reason);
+        toast({
+          title: 'Помилка :(',
+          description: 'Щось пішло не так, спробуйте ще!',
+          duration: 1500,
+          variant: 'destructive'
+        });
       })
       .finally(() => setLoading(false));
   }, [options]);

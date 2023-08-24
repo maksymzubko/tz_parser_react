@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Article } from '@/api/articles/types.ts';
 import { convertDateToString } from '@/lib/utils.ts';
-import { EditIcon, TrashIcon, ViewIcon } from 'lucide-react';
+import { EditIcon, PlusIcon, TrashIcon, ViewIcon } from 'lucide-react';
 import NoImg from '@/assets/no-img.png';
 import { useNavigate } from 'react-router-dom';
 import { links } from '@/router.tsx';
@@ -9,6 +9,7 @@ import YesNoDialog from '@/components/ui/yes-no-dialog.tsx';
 import articlesApi from '@/api/articles/articles.api.ts';
 import { useToast } from '@/components/ui/use-toast.ts';
 import { AxiosError } from 'axios';
+import { Button } from '@/components/ui/button.tsx';
 
 interface Props {
   data: Article[];
@@ -24,7 +25,13 @@ const DataTable = ({ data, onDeleted }: Props) => {
     setLoading(true);
     articlesApi
       .deleteArticle(id)
-      .then(() => onDeleted(id))
+      .then(() => {
+        onDeleted(id);
+        toast({
+          title: `Пост #${id} видалено.`,
+          duration: 1500
+        });
+      })
       .catch((err: AxiosError<{ errors: string[] | undefined }>) => {
         if (err.response && err.response.data.errors) {
           toast({
@@ -47,6 +54,11 @@ const DataTable = ({ data, onDeleted }: Props) => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-[90%]">
+      <div className={'flex w-full items-center justify-end mb-4'}>
+        <Button onClick={() => navigate(links.create)} className={'text-body-medium font-medium flex gap-2'}>
+          <PlusIcon size={20} /> Створити
+        </Button>
+      </div>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr className={'text-center'}>
@@ -58,6 +70,9 @@ const DataTable = ({ data, onDeleted }: Props) => {
             </th>
             <th scope="col" className="px-6 py-3">
               Дата
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Назва
             </th>
             <th scope="col" className="px-6 py-3">
               Вміст
@@ -89,6 +104,13 @@ const DataTable = ({ data, onDeleted }: Props) => {
                     'text-ellipsis whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[100px] px-6 py-4'
                   }
                 >
+                  {d.title}
+                </td>
+                <td
+                  className={
+                    'text-ellipsis whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[100px] px-6 py-4'
+                  }
+                >
                   {d.content}
                 </td>
                 <td className="px-6 py-4 w-[240px]">
@@ -101,7 +123,7 @@ const DataTable = ({ data, onDeleted }: Props) => {
                 <td className={'w-[50px] px-6 py-4'}>
                   <div className={'flex items-center justify-center gap-4 [&>*]:cursor-pointer'}>
                     <ViewIcon onClick={() => navigate(`${links.article}${d.id}`, { replace: false })} size={30} />
-                    <EditIcon onClick={() => navigate(`${links.article}${d.id}`)} size={30} />
+                    <EditIcon onClick={() => navigate(`${links.edit}${d.id}`)} size={30} />
                     <YesNoDialog
                       description={
                         'Цю дію неможливо буде відмінити. Після цього цей пост буде перманентно видалено з нашої бази данних.'

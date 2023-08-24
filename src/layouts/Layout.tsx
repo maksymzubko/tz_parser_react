@@ -7,7 +7,7 @@ const AdminLayout = () => {
   const isAuthorized = useSelector(SelectIsAuthorized);
   const location = useLocation();
 
-  if (!isAuthorized && !location.pathname.includes('login')) return <Navigate to={links.login} replace={true} />;
+  if (!isAuthorized && !location.pathname.includes('login')) return <Navigate to={links.login} />;
 
   return <Outlet />;
 };
