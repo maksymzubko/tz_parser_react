@@ -4,12 +4,12 @@ import { Article as ArticleType } from '@/api/articles/types.ts';
 import articlesApi from '@/api/articles/articles.api.ts';
 import Loader from '@/components/ui/Loader.tsx';
 import ArticleForm from '@/components/forms/ArticleForm.tsx';
-import {useToast} from "@/components/ui/use-toast.ts";
+import { useToast } from '@/components/ui/use-toast.ts';
 
 const AdminArticle = () => {
   const [loading, setLoading] = useState(true);
   const params = useLocation();
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   let id = '';
   if (params.pathname.includes('edit')) id = params.pathname.split('/').at(-1);

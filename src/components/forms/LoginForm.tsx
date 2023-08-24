@@ -11,9 +11,11 @@ import { useToast } from '@/components/ui/use-toast.ts';
 import { useDispatch } from 'react-redux';
 import { setAuthorized } from '@/redux/store/user/slice.ts';
 import { AxiosError } from 'axios';
+import { useState } from 'react';
 
 const LoginForm = () => {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const form = useForm({
     resolver: zodResolver(LoginValidation),
@@ -24,6 +26,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (values: zod.infer<typeof LoginValidation>) => {
+    setLoading(true);
     authApi
       .login({ username: values.username, password: values.password })
       .then(() => {
@@ -42,20 +45,14 @@ const LoginForm = () => {
             variant: 'destructive'
           });
         }
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
     <section className={'p-5 w-full bg-light-2 dark:bg-dark-4 max-w-[400px] rounded-2xl'}>
       <Form {...form}>
-        <form
-          onSubmit={(event) => {
-            form.handleSubmit(onSubmit);
-            event.preventDefault();
-          }}
-          autoComplete={'off'}
-          className="flex flex-col gap-10"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
           <FormField
             control={form.control}
             name="username"
@@ -65,7 +62,7 @@ const LoginForm = () => {
                 <FormControl>
                   <Input
                     type={'text'}
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || loading}
                     placeholder={'Ваш логін'}
                     className={''}
                     {...field}
@@ -83,7 +80,7 @@ const LoginForm = () => {
                 <FormLabel className={'[:not(invalid)]:text-dark-3 :not(invalid)]:dark:text-light-1'}>Пароль</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || loading}
                     type={'password'}
                     placeholder={'Ваш пароль'}
                     className={''}
@@ -97,7 +94,7 @@ const LoginForm = () => {
 
           <div className={'w-full flex items-end justify-center gap-4'}>
             <Button type={'submit'} disabled={form.formState.isSubmitting} className={'w-[60%]'}>
-              {form.formState.isSubmitting ? <Loader /> : 'Увійти'}
+              {form.formState.isSubmitting || loading ? <Loader /> : 'Увійти'}
             </Button>
           </div>
         </form>
