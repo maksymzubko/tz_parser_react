@@ -1,16 +1,6 @@
 export interface Login {
-  email: string;
+  username: string;
   password: string;
-}
-
-export interface Register {
-  email: string;
-  password: string;
-}
-
-export interface RegisterResponse {
-  password: string;
-  email: string;
 }
 
 export interface LoginResponse {

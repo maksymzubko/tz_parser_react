@@ -1,26 +1,27 @@
 import './App.css';
 import { useRoutes } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
-import { routes as r } from './router.tsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { SelectIsAuthorized } from '@/redux/store/user/selector.ts';
+import { useEffect, useRef, useState } from 'react';
+import { routes } from './router.tsx';
+import { useDispatch } from 'react-redux';
 import { setAuthorized } from '@/redux/store/user/slice.ts';
 import Cookies from 'js-cookie';
 import authApi from '@/api/auth/auth.api.ts';
 import TopBar from '@/components/shared/TopBar.tsx';
 import Footer from '@/components/shared/Footer.tsx';
 import { Button } from '@/components/ui/button.tsx';
+import { Toaster } from '@/components/ui/toaster.tsx';
+import Loader from '@/components/ui/Loader.tsx';
 
 function App() {
-  const isAuthorized = useSelector(SelectIsAuthorized);
-  const routes = isAuthorized ? r.authorized : r['not-authorized'];
   const toTopBtn = useRef<HTMLButtonElement>();
 
+  const [loading, setLoading] = useState(true);
   const route = useRoutes(routes);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = Cookies.get('tz_token');
+    setLoading(true);
+    const token = Cookies.get('access_token_tz_demo');
     if (token) {
       authApi
         .verifyToken()
@@ -29,9 +30,10 @@ function App() {
         })
         .catch(() => {
           dispatch(setAuthorized({ isAuthorized: false }));
-        });
+        })
+        .finally(() => setLoading(false));
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -57,15 +59,20 @@ function App() {
   }
 
   return (
-    <div className={'dark:bg-dark-4 h-auto w-full text-black dark:text-light-1'}>
+    <div className={'dark:bg-dark-3 h-auto w-full text-black dark:text-light-1'}>
       <TopBar />
-      {route}
+      {loading && (
+        <span className={'fixed left-0 top-0 w-full h-full flex items-center justify-center'}>
+          <Loader />
+        </span>
+      )}
+      {!loading && route}
       <Button
         ref={toTopBtn}
         id="to-top-button"
         onClick={goToTop}
         className={
-          '!fixed bottom-5 right-5 hidden rounded-full bg-red-600 p-3 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg'
+          '!fixed bottom-20 right-5 hidden rounded-full bg-red-600 p-3 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg'
         }
       >
         <svg
@@ -84,6 +91,7 @@ function App() {
         </svg>
       </Button>
       <Footer />
+      <Toaster />
     </div>
   );
 }

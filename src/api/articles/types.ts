@@ -8,6 +8,15 @@ export interface Article {
   categories: string[];
 }
 
+export interface ArticleRequest {
+  title: string;
+  sourceLink: string;
+  date: number;
+  content: string;
+  image: string;
+  categories: string[];
+}
+
 export interface PageMeta {
   page: number;
   take: number;
