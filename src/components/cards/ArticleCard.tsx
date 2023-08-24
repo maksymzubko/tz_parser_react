@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { useNavigate } from 'react-router-dom';
 import { links } from '@/router.tsx';
-import {convertDateToString} from "@/lib/utils.ts";
+import { convertDateToString } from '@/lib/utils.ts';
 
 interface Props {
   article: Article;
@@ -39,7 +39,7 @@ const ArticleCard = ({ article }: Props) => {
         {article.categories.map((c) => (
           <Badge
             variant="outline"
-            className={'dark:bg-dark-4 bg-light-2 text-dark-4 dark:text-light-1'}
+            className={'dark:bg-dark-4 bg-gray-200 border-dark-3 text-dark-4 dark:text-light-1'}
           >
             {c}
           </Badge>
