@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import Loader from '@/components/ui/Loader.tsx';
+import Pagination from '@/components/shared/Pagination.tsx';
 import { Order, PageArticles, PageOptions } from '@/api/articles/types.ts';
 import articlesApi from '@/api/articles/articles.api.ts';
-import ArticleCard from '@/components/cards/ArticleCard.tsx';
-import { v4 as uuidv4 } from 'uuid';
-import Pagination from '@/components/shared/Pagination.tsx';
-import Loader from '@/components/ui/Loader.tsx';
+import DataTable from '@/components/shared/DataTable.tsx';
 import FilterAccordion from '@/components/ui/filter-accordion.tsx';
 
-const Landing = () => {
+const AdminLanding = () => {
   const [loading, setLoading] = useState(true);
   const [options, setOptions] = useState<PageOptions>({
     take: 10,
@@ -66,6 +65,12 @@ const Landing = () => {
       });
   };
 
+  const onDeleted = (id: number) => {
+    setArticles((prev) => {
+      return { ...prev, data: prev.data.filter((d) => d.id !== id) };
+    });
+  };
+
   return (
     <div className={'max-w-full dark:rounded-full flex flex-col gap-4'}>
       <FilterAccordion onChange={onChange} />
@@ -77,12 +82,10 @@ const Landing = () => {
       )}
 
       <section
-        className={`${
-          loading ? 'invisible' : 'visible'
-        } transition ease-in flex flex-wrap gap-4 w-full justify-between px-16`}
+        className={`${loading ? 'invisible' : 'visible'} transition ease-in flex flex-wrap gap-4 w-full justify-center`}
       >
         {articles?.data?.length > 0 ? (
-          articles.data.map((a) => <ArticleCard key={`article-card-${uuidv4()}`} article={a} />)
+          <DataTable data={articles.data} onDeleted={onDeleted} />
         ) : (
           <div className={'text-base-regular'}>No data found</div>
         )}
@@ -95,4 +98,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default AdminLanding;

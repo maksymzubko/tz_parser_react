@@ -1,26 +1,24 @@
 import './App.css';
 import { useRoutes } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import { routes as r } from './router.tsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { SelectIsAuthorized } from '@/redux/store/user/selector.ts';
+import { routes } from './router.tsx';
+import { useDispatch } from 'react-redux';
 import { setAuthorized } from '@/redux/store/user/slice.ts';
 import Cookies from 'js-cookie';
 import authApi from '@/api/auth/auth.api.ts';
 import TopBar from '@/components/shared/TopBar.tsx';
 import Footer from '@/components/shared/Footer.tsx';
 import { Button } from '@/components/ui/button.tsx';
+import { Toaster } from '@/components/ui/toaster.tsx';
 
 function App() {
-  const isAuthorized = useSelector(SelectIsAuthorized);
-  const routes = isAuthorized ? r.authorized : r['not-authorized'];
   const toTopBtn = useRef<HTMLButtonElement>();
 
   const route = useRoutes(routes);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = Cookies.get('tz_token');
+    const token = Cookies.get('access_token_tz_demo');
     if (token) {
       authApi
         .verifyToken()
@@ -31,7 +29,7 @@ function App() {
           dispatch(setAuthorized({ isAuthorized: false }));
         });
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -84,6 +82,7 @@ function App() {
         </svg>
       </Button>
       <Footer />
+      <Toaster />
     </div>
   );
 }

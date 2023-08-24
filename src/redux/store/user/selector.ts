@@ -6,7 +6,4 @@ export const selectDomain = (state: RootState) => {
   return state.user;
 };
 
-export const SelectIsAuthorized = createSelector(
-  [selectDomain],
-  (userState: UserState) => userState.isAuthorized
-);
+export const SelectIsAuthorized = createSelector([selectDomain], (userState: UserState) => userState.isAuthorized);

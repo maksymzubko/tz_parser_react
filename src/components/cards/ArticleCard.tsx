@@ -17,22 +17,14 @@ const ArticleCard = ({ article }: Props) => {
   return (
     <div
       className={
-        'card_article w-full flex justify-between 2xl:items-start items-center flex-col md:w-[40%] gap-4 p-4 bg-light-2 dark:bg-dark-3 rounded-2xl mx-3'
+        'card_article self-start w-full flex justify-between 2xl:items-start items-center flex-col md:w-[40%] gap-4 p-4 bg-light-2 dark:bg-dark-3 rounded-2xl mx-3'
       }
     >
       {convertDateToString(article.date)}
-      <div
-        className={'flex 2xl:flex-row flex-col justify-center items-center 2xl:items-start gap-4'}
-      >
-        <img
-          src={article.image ?? NoImg}
-          className={'w-[300px] h-full object-cover'}
-          alt={'image'}
-        />
+      <div className={'flex 2xl:flex-row flex-col justify-center items-center 2xl:items-start gap-4'}>
+        <img src={article.image ?? NoImg} className={'w-[300px] h-full object-cover'} alt={'image'} />
         <div className={'content w-full'}>
-          <h3>
-            {article.title.length > 200 ? `${article.title.substring(0, 200)}...` : article.title}
-          </h3>
+          <h3>{article.title.length > 200 ? `${article.title.substring(0, 200)}...` : article.title}</h3>
         </div>
       </div>
       <div className={'flex flex-wrap gap-2'}>
@@ -40,6 +32,7 @@ const ArticleCard = ({ article }: Props) => {
           <Badge
             variant="outline"
             className={'dark:bg-dark-4 bg-gray-200 border-dark-3 text-dark-4 dark:text-light-1'}
+            key={`badge-articles-landing-${c}`}
           >
             {c}
           </Badge>
