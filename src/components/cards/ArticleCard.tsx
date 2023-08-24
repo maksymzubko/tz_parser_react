@@ -17,7 +17,7 @@ const ArticleCard = ({ article }: Props) => {
   return (
     <div
       className={
-        'card_article self-start w-full flex justify-between 2xl:items-start items-center flex-col md:w-[40%] gap-4 p-4 bg-light-2 dark:bg-dark-3 rounded-2xl mx-3'
+        'card_article self-start w-full flex justify-between 2xl:items-start items-center flex-col md:w-[45%] gap-4 p-4 bg-light-2 dark:bg-dark-3 rounded-2xl mx-3'
       }
     >
       {convertDateToString(article.date)}

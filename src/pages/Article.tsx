@@ -9,11 +9,13 @@ import { Button } from '@/components/ui/button.tsx';
 import { links } from '@/router.tsx';
 import { Home } from 'lucide-react';
 import Loader from '@/components/ui/Loader.tsx';
+import {useToast} from "@/components/ui/use-toast.ts";
 
 const Article = () => {
   const [loading, setLoading] = useState(true);
   const params = useLocation();
   const navigate = useNavigate();
+  const {toast} = useToast();
 
   const id = params.pathname.split('/').at(-1);
   const [article, setArticle] = useState<ArticleType>();
@@ -26,7 +28,12 @@ const Article = () => {
         setArticle(res);
       })
       .catch((reason) => {
-        console.log(reason);
+        toast({
+          title: 'Помилка :(',
+          description: 'Щось пішло не так, спробуйте ще!',
+          duration: 1500,
+          variant: 'destructive'
+        });
       })
       .finally(() => setLoading(false));
   }, [id]);
