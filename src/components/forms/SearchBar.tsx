@@ -1,11 +1,4 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form.tsx';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { useForm } from 'react-hook-form';
@@ -25,7 +18,7 @@ const SearchBar = ({ onChange }: Props) => {
     resolver: zodResolver(ArticleOptionsValidation),
     defaultValues: {
       search: '',
-      sortBy: 'Desc',
+      sortBy: 'DESC',
       category: ''
     }
   });
@@ -36,17 +29,9 @@ const SearchBar = ({ onChange }: Props) => {
   };
 
   return (
-    <section
-      className={
-        'p-3 w-full bg-light-2 [&_label]:!text-dark-3 dark:[&_label]:!text-light-1 dark:bg-dark-3'
-      }
-    >
+    <section className={'p-3 w-full bg-light-2 [&_label]:!text-dark-3 dark:[&_label]:!text-light-1 dark:bg-dark-3'}>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          autoComplete={'off'}
-          className="flex flex-col gap-10"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
           <div className={'flex md:flex-row items-center gap-10 flex-col'}>
             <FormField
               control={form.control}
@@ -89,9 +74,7 @@ const SearchBar = ({ onChange }: Props) => {
               name="sortBy"
               render={({ field }) => (
                 <FormItem className={'flex flex-col w-full gap-3'}>
-                  <FormLabel className={'text-base-semibold text-light-2'}>
-                    Сортування за датою
-                  </FormLabel>
+                  <FormLabel className={'text-base-semibold text-light-2'}>Сортування за датою</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}

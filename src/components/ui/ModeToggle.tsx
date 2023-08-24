@@ -1,13 +1,13 @@
 import { Moon, Sun } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.tsx';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { useTheme } from '@/components/theme-provider';
+} from '@/components/ui/dropdown-menu.tsx';
+import { useTheme } from '@/components/theme-provider.tsx';
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
@@ -17,9 +17,7 @@ export function ModeToggle() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className={
-            'rounded-full dark:text-white dark:bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0'
-          }
+          className={'rounded-full dark:text-white dark:bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0'}
           size="icon"
         >
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />

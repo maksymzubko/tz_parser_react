@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { links } from '@/router.tsx';
 import { Home, LucideHome } from 'lucide-react';
-import Loader from "@/components/shared/Loader.tsx";
+import Loader from '@/components/ui/Loader.tsx';
 
 const Article = () => {
   const [loading, setLoading] = useState(true);
@@ -38,8 +38,7 @@ const Article = () => {
     return removeFirst.replace(/(<\/p>)\s*/g, '$1');
   };
 
-  if (loading)
-    return <Loader/>
+  if (loading) return <Loader />;
 
   if (article)
     return (
@@ -53,9 +52,7 @@ const Article = () => {
         </Button>
         <div className={'flex flex-col justify-center items-center gap-4 w-full'}>
           <div className={'flex flex-col items-start gap-4'}>
-            <span className={'text-body-medium text-[24px]'}>
-              {convertDateToString(article.date)}
-            </span>
+            <span className={'text-body-medium text-[24px]'}>{convertDateToString(article.date)}</span>
             <img
               src={article.image ?? NoImg}
               className={'float-left max-w-full md:max-w-[700px] h-full object-cover'}
@@ -63,11 +60,10 @@ const Article = () => {
             />
             <div className={'flex flex-wrap gap-2'}>
               {article.categories.map((c) => (
-                <Badge key={`badge-article-${c}`}
+                <Badge
+                  key={`badge-article-${c}`}
                   variant="outline"
-                  className={
-                    'dark:bg-dark-4 bg-gray-200 border-[1px] border-dark-3 text-dark-4 dark:text-light-1'
-                  }
+                  className={'dark:bg-dark-4 bg-gray-200 border-[1px] border-dark-3 text-dark-4 dark:text-light-1'}
                 >
                   {c}
                 </Badge>
