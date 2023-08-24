@@ -25,6 +25,7 @@ interface Error {
 }
 
 const ArticleForm = ({ initialData }: Props) => {
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -61,6 +62,7 @@ const ArticleForm = ({ initialData }: Props) => {
   };
 
   const onSubmit = (values: zod.infer<typeof ArticleValidation>) => {
+    setLoading(true);
     const { title, image, content, sourceLink } = values;
     const body = { title, categories, content, image, date: new Date().getTime(), sourceLink } as ArticleRequest;
     if (initialData) {
@@ -74,7 +76,8 @@ const ArticleForm = ({ initialData }: Props) => {
         })
         .catch((err: AxiosError<Error>) => {
           handleError(err);
-        });
+        })
+        .finally(() => setLoading(false));
     } else {
       articlesApi
         .createArticle(body)
@@ -88,7 +91,8 @@ const ArticleForm = ({ initialData }: Props) => {
         })
         .catch((err: AxiosError<Error>) => {
           handleError(err);
-        });
+        })
+        .finally(() => setLoading(false));
     }
   };
 
@@ -117,14 +121,7 @@ const ArticleForm = ({ initialData }: Props) => {
   return (
     <section className={'p-5 w-full bg-light-2 dark:bg-dark-4 rounded-2xl'}>
       <Form {...form}>
-        <form
-          onSubmit={(event) => {
-            form.handleSubmit(onSubmit);
-            event.preventDefault();
-          }}
-          autoComplete={'off'}
-          className="flex flex-col gap-10"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete={'off'} className="flex flex-col gap-10">
           <FormField
             control={form.control}
             name="title"
@@ -135,7 +132,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || loading}
                     placeholder={'Заголовок новини'}
                     className={'max-h-[200px] min-h-[50px]'}
                     {...field}
@@ -155,7 +152,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || loading}
                     type={'text'}
                     placeholder={'Посилання на оригінал'}
                     className={''}
@@ -176,7 +173,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || loading}
                     type={'text'}
                     placeholder={'Посилання на обкладинку'}
                     className={''}
@@ -200,13 +197,13 @@ const ArticleForm = ({ initialData }: Props) => {
                     <div className={'flex items-center justify-between gap-4'}>
                       <Input
                         type={'text'}
-                        disabled={form.formState.isSubmitting}
+                        disabled={form.formState.isSubmitting || loading}
                         placeholder={'Назва категорії'}
                         className={'w-[80%]'}
                         {...field}
                       />
                       <Button
-                        disabled={form.formState.isSubmitting}
+                        disabled={form.formState.isSubmitting || loading}
                         className={'w-[15%]'}
                         type={'button'}
                         onClick={onAddCategory}
@@ -219,7 +216,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 <FormMessage />
                 <div
                   className={`flex justify-start items-center flex-wrap gap-4 ${
-                    form.formState.isSubmitting ? 'pointer-events-none' : 'pointer-events-auto'
+                    form.formState.isSubmitting || loading ? 'pointer-events-none' : 'pointer-events-auto'
                   }`}
                 >
                   {categories.map((c) => (
@@ -239,7 +236,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    disabled={form.formState.isSubmitting}
+                    disabled={form.formState.isSubmitting || loading}
                     placeholder={'Контент (можна HTML)'}
                     className={'max-h-[400px] min-h-[50px]'}
                     {...field}
@@ -251,8 +248,8 @@ const ArticleForm = ({ initialData }: Props) => {
           />
 
           <div className={'w-full flex items-end justify-center gap-4'}>
-            <Button type={'submit'} disabled={form.formState.isSubmitting} className={'w-[60%]'}>
-              {form.formState.isSubmitting ? <Loader /> : initialData ? 'Редагувати' : 'Створити'}
+            <Button type={'submit'} disabled={form.formState.isSubmitting || loading} className={'w-[60%]'}>
+              {form.formState.isSubmitting || loading ? <Loader /> : initialData ? 'Редагувати' : 'Створити'}
             </Button>
           </div>
         </form>

@@ -61,7 +61,11 @@ function App() {
   return (
     <div className={'dark:bg-dark-3 h-auto w-full text-black dark:text-light-1'}>
       <TopBar />
-      {loading && <Loader />}
+      {loading && (
+        <span className={'fixed left-0 top-0 w-full h-full flex items-center justify-center'}>
+          <Loader />
+        </span>
+      )}
       {!loading && route}
       <Button
         ref={toTopBtn}

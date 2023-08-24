@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Loader from '@/components/ui/Loader.tsx';
 import Pagination from '@/components/shared/Pagination.tsx';
 import { Order, PageArticles, PageOptions } from '@/api/articles/types.ts';
 import articlesApi from '@/api/articles/articles.api.ts';
 import DataTable from '@/components/shared/DataTable.tsx';
 import FilterAccordion from '@/components/ui/filter-accordion.tsx';
-import {useToast} from "@/components/ui/use-toast.ts";
+import { useToast } from '@/components/ui/use-toast.ts';
 
 const AdminLanding = () => {
   const [loading, setLoading] = useState(true);
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [options, setOptions] = useState<PageOptions>({
     take: 10,
     page: 1,
@@ -94,12 +94,12 @@ const AdminLanding = () => {
         {articles?.data?.length > 0 ? (
           <DataTable data={articles.data} onDeleted={onDeleted} />
         ) : (
-          <div className={'text-base-regular'}>No data found</div>
+          <h2 className={'text-base-regular font-bold text-[32px] text-center w-full'}>Нічого не знайдено</h2>
         )}
       </section>
 
       <section className={'mb-14 mt-5'}>
-        {articles?.meta && !loading && <Pagination meta={articles?.meta} onNext={onNext} onPrev={onPrev} />}
+        {articles?.data.length > 0 && !loading && <Pagination meta={articles?.meta} onNext={onNext} onPrev={onPrev} />}
       </section>
     </div>
   );
