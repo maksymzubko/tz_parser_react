@@ -55,7 +55,7 @@ const DataTable = ({ data, onDeleted }: Props) => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-[90%]">
       <div className={'flex w-full items-center justify-end mb-4'}>
-        <Button onClick={() => navigate(links.create)} className={'text-body-medium font-medium flex gap-2'}>
+        <Button onClick={() => navigate(links.create)} className={'text-body-medium font-medium flex gap-2 dark:text-dark-3 text-light-1'}>
           <PlusIcon size={20} /> Створити
         </Button>
       </div>

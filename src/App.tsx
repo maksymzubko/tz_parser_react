@@ -33,6 +33,7 @@ function App() {
         })
         .finally(() => setLoading(false));
     }
+    else setLoading(false)
   }, [dispatch]);
 
   useEffect(() => {
