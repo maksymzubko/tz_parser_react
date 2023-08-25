@@ -54,7 +54,7 @@ const Article = () => {
         }
       >
         <Button onClick={() => navigate(links.landing)} className={'flex gap-4 items-center mb-5'}>
-          <Home /> Back to home
+          <Home /> На головну
         </Button>
         <div className={'flex flex-col justify-center items-center gap-4 w-full'}>
           <div className={'flex flex-col items-start gap-4'}>
