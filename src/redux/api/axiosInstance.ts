@@ -30,7 +30,6 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   console.error(`[response error] [${JSON.stringify(error)}]`);
   const token = Cookies.get('access_token_tz_demo');
-
   if (error.response.status === 401 && token) {
     Cookies.remove('access_token_tz_demo');
   }

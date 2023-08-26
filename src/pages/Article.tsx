@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Article as ArticleType } from '@/api/articles/types.ts';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NoImg from '@/assets/no-img.png';
-import articlesApi from '@/api/articles/articles.api.ts';
 import { convertDateToString } from '@/lib/utils.ts';
 import { Badge } from '@/components/ui/badge.tsx';
 import { Button } from '@/components/ui/button.tsx';
@@ -10,33 +8,26 @@ import { links } from '@/router.tsx';
 import { Home } from 'lucide-react';
 import Loader from '@/components/ui/Loader.tsx';
 import { useToast } from '@/components/ui/use-toast.ts';
+import { useGetArticleByIdQuery } from '@/redux/api/articleApi.ts';
 
 const Article = () => {
-  const [loading, setLoading] = useState(true);
   const params = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const id = params.pathname.split('/').at(-1);
-  const [article, setArticle] = useState<ArticleType>();
+  const { data: article, isError, error, isLoading } = useGetArticleByIdQuery(id);
 
   useEffect(() => {
-    setLoading(true);
-    articlesApi
-      .getArticle(id)
-      .then((res) => {
-        setArticle(res);
-      })
-      .catch((reason) => {
-        toast({
-          title: 'Помилка :(',
-          description: 'Щось пішло не так, спробуйте ще!',
-          duration: 1500,
-          variant: 'destructive'
-        });
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
+    if (isError) {
+      toast({
+        title: 'Помилка :(',
+        description: 'Щось пішло не так, спробуйте ще!',
+        duration: 1500,
+        variant: 'destructive'
+      });
+    }
+  }, [isError, error, toast]);
 
   const fixLinks = (str: string) => {
     const fixed = str.replaceAll('/static/', 'https://www.rbc.ua/static/');
@@ -44,7 +35,7 @@ const Article = () => {
     return removeFirst.replace(/(<\/p>)\s*/g, '$1');
   };
 
-  if (loading) return <Loader />;
+  if (isLoading) return <Loader />;
 
   if (article)
     return (
