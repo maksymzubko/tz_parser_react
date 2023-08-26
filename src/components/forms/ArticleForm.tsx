@@ -8,13 +8,13 @@ import { Input } from '@/components/ui/input.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import Loader from '@/components/ui/Loader.tsx';
 import { ArticleValidation } from '@/lib/validations/article.ts';
-import { Article, ArticleRequest } from '@/api/articles/types.ts';
 import { Textarea } from '@/components/ui/textarea.tsx';
 import CategoryCard from '@/components/cards/CategoryCard.tsx';
-import articlesApi from '@/api/articles/articles.api.ts';
 import { useNavigate } from 'react-router-dom';
 import { links } from '@/router.tsx';
 import { AxiosError } from 'axios';
+import { useAddArticleMutation, useUpdateArticleMutation } from '@/redux/api/articleApi.ts';
+import { Article, ArticleRequest } from '@/redux/api/types/article.types.ts';
 
 interface Props {
   initialData?: Article;
@@ -25,9 +25,10 @@ interface Error {
 }
 
 const ArticleForm = ({ initialData }: Props) => {
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [addArticle, { isLoading: isLoadingAdd }] = useAddArticleMutation();
+  const [updateArticle, { isLoading: isLoadingUpdate }] = useUpdateArticleMutation();
 
   const [categories, setCategories] = useState(initialData?.categories ?? []);
   const form = useForm({
@@ -61,38 +62,33 @@ const ArticleForm = ({ initialData }: Props) => {
     dismiss();
   };
 
-  const onSubmit = (values: zod.infer<typeof ArticleValidation>) => {
-    setLoading(true);
+  const onSubmit = async (values: zod.infer<typeof ArticleValidation>) => {
     const { title, image, content, sourceLink } = values;
     const body = { title, categories, content, image, date: new Date().getTime(), sourceLink } as ArticleRequest;
     if (initialData) {
-      articlesApi
-        .updateArticle(initialData.id, body)
-        .then((res) => {
-          const { dismiss } = toast({
-            title: `Пост #${res.id} відредаговано.`,
-            action: <Button onClick={() => handleNavigate(res.id, dismiss)}>Переглянути</Button>
-          });
-        })
-        .catch((err: AxiosError<Error>) => {
-          handleError(err);
-        })
-        .finally(() => setLoading(false));
+      try {
+        const article = await updateArticle({ id: initialData.id.toString(), body }).unwrap();
+        const { dismiss } = toast({
+          title: `Пост #${article.id} відредаговано.`,
+          action: <Button onClick={() => handleNavigate(article.id, dismiss)}>Переглянути</Button>
+        });
+      } catch (error) {
+        const err = error as AxiosError<Error>;
+        handleError(err);
+      }
     } else {
-      articlesApi
-        .createArticle(body)
-        .then((res) => {
-          const { dismiss } = toast({
-            title: `Пост #${res.id} створено.`,
-            action: <Button onClick={() => handleNavigate(res.id, dismiss)}>Переглянути</Button>
-          });
-          form.reset();
-          setCategories([]);
-        })
-        .catch((err: AxiosError<Error>) => {
-          handleError(err);
-        })
-        .finally(() => setLoading(false));
+      try {
+        const article = await addArticle(body).unwrap();
+        form.reset();
+        setCategories([]);
+        const { dismiss } = toast({
+          title: `Пост #${article.id} створено.`,
+          action: <Button onClick={() => handleNavigate(article.id, dismiss)}>Переглянути</Button>
+        });
+      } catch (error) {
+        const err = error as AxiosError<Error>;
+        handleError(err);
+      }
     }
   };
 
@@ -132,7 +128,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    disabled={form.formState.isSubmitting || loading}
+                    disabled={isLoadingAdd || isLoadingUpdate}
                     placeholder={'Заголовок новини'}
                     className={'max-h-[200px] min-h-[50px]'}
                     {...field}
@@ -152,7 +148,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    disabled={form.formState.isSubmitting || loading}
+                    disabled={isLoadingAdd || isLoadingUpdate}
                     type={'text'}
                     placeholder={'Посилання на оригінал'}
                     className={''}
@@ -173,7 +169,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    disabled={form.formState.isSubmitting || loading}
+                    disabled={isLoadingAdd || isLoadingUpdate}
                     type={'text'}
                     placeholder={'Посилання на обкладинку'}
                     className={''}
@@ -197,13 +193,13 @@ const ArticleForm = ({ initialData }: Props) => {
                     <div className={'flex items-center justify-between gap-4'}>
                       <Input
                         type={'text'}
-                        disabled={form.formState.isSubmitting || loading}
+                        disabled={isLoadingAdd || isLoadingUpdate}
                         placeholder={'Назва категорії'}
                         className={'w-[80%]'}
                         {...field}
                       />
                       <Button
-                        disabled={form.formState.isSubmitting || loading}
+                        disabled={isLoadingAdd || isLoadingUpdate}
                         className={'w-[15%]'}
                         type={'button'}
                         onClick={onAddCategory}
@@ -216,7 +212,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 <FormMessage />
                 <div
                   className={`flex justify-start items-center flex-wrap gap-4 ${
-                    form.formState.isSubmitting || loading ? 'pointer-events-none' : 'pointer-events-auto'
+                    isLoadingAdd || isLoadingUpdate ? 'pointer-events-none' : 'pointer-events-auto'
                   }`}
                 >
                   {categories.map((c) => (
@@ -236,7 +232,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    disabled={form.formState.isSubmitting || loading}
+                    disabled={isLoadingAdd || isLoadingUpdate}
                     placeholder={'Контент (можна HTML)'}
                     className={'max-h-[400px] min-h-[50px]'}
                     {...field}
@@ -248,8 +244,8 @@ const ArticleForm = ({ initialData }: Props) => {
           />
 
           <div className={'w-full flex items-end justify-center gap-4'}>
-            <Button type={'submit'} disabled={form.formState.isSubmitting || loading} className={'w-[60%]'}>
-              {form.formState.isSubmitting || loading ? <Loader /> : initialData ? 'Редагувати' : 'Створити'}
+            <Button type={'submit'} disabled={isLoadingAdd || isLoadingUpdate} className={'w-[60%]'}>
+              {isLoadingAdd || isLoadingUpdate ? <Loader /> : initialData ? 'Редагувати' : 'Створити'}
             </Button>
           </div>
         </form>

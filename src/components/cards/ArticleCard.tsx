@@ -1,11 +1,11 @@
 import React from 'react';
-import { Article } from '@/api/articles/types.ts';
 import NoImg from '@/assets/no-img.png';
 import { Button } from '@/components/ui/button.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { useNavigate } from 'react-router-dom';
 import { links } from '@/router.tsx';
 import { convertDateToString } from '@/lib/utils.ts';
+import { Article } from '@/redux/api/types/article.types.ts';
 
 interface Props {
   article: Article;

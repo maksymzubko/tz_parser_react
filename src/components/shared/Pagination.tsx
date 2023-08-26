@@ -1,5 +1,5 @@
-import { PageMeta } from '@/api/articles/types.ts';
 import { Button } from '@/components/ui/button.tsx';
+import { PageMeta } from '@/redux/api/types/article.types.ts';
 
 interface Props {
   meta: PageMeta;

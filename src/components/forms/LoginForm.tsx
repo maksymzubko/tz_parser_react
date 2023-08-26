@@ -6,17 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import { LoginValidation } from '@/lib/validations/login.ts';
 import Loader from '@/components/ui/Loader.tsx';
-import authApi from '@/api/auth/auth.api.ts';
 import { useToast } from '@/components/ui/use-toast.ts';
-import { useDispatch } from 'react-redux';
-import { setAuthorized } from '@/redux/store/user/slice.ts';
 import { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useLoginMutation } from '@/redux/api/authApi.ts';
 
 const LoginForm = () => {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+
   const form = useForm({
     resolver: zodResolver(LoginValidation),
     defaultValues: {
@@ -25,28 +21,26 @@ const LoginForm = () => {
     }
   });
 
-  const onSubmit = (values: zod.infer<typeof LoginValidation>) => {
-    setLoading(true);
-    authApi
-      .login({ username: values.username, password: values.password })
-      .then(() => {
-        dispatch(setAuthorized({ isAuthorized: true }));
-      })
-      .catch((err: AxiosError<{ errors: { field: 'username' | 'password'; message: string }[] | undefined }>) => {
-        if (err.response && err.response.data.errors) {
-          err.response.data.errors.forEach((d) => {
-            form.setError(d.field, { message: d.message });
-          });
-        } else {
-          toast({
-            title: 'Помилка :(',
-            description: 'Щось пішло не так, спробуйте ще!',
-            duration: 1500,
-            variant: 'destructive'
-          });
-        }
-      })
-      .finally(() => setLoading(false));
+  const [logIn, { isLoading }] = useLoginMutation();
+
+  const onSubmit = async (values: zod.infer<typeof LoginValidation>) => {
+    try {
+      await logIn({ username: values.username, password: values.password }).unwrap();
+    } catch (error) {
+      const err = error as AxiosError<{ errors: { field: 'username' | 'password'; message: string }[] | undefined }>;
+      if (err.response && err.response.data.errors) {
+        err.response.data.errors.forEach((d) => {
+          form.setError(d.field, { message: d.message });
+        });
+      } else {
+        toast({
+          title: 'Помилка :(',
+          description: 'Щось пішло не так, спробуйте ще!',
+          duration: 1500,
+          variant: 'destructive'
+        });
+      }
+    }
   };
 
   return (
@@ -60,13 +54,7 @@ const LoginForm = () => {
               <FormItem className={''}>
                 <FormLabel className={'[:not(invalid)]:text-dark-3 :not(invalid)]:dark:text-light-1'}>Логін</FormLabel>
                 <FormControl>
-                  <Input
-                    type={'text'}
-                    disabled={form.formState.isSubmitting || loading}
-                    placeholder={'Ваш логін'}
-                    className={''}
-                    {...field}
-                  />
+                  <Input type={'text'} disabled={isLoading} placeholder={'Ваш логін'} className={''} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -79,13 +67,7 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel className={'[:not(invalid)]:text-dark-3 :not(invalid)]:dark:text-light-1'}>Пароль</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={form.formState.isSubmitting || loading}
-                    type={'password'}
-                    placeholder={'Ваш пароль'}
-                    className={''}
-                    {...field}
-                  />
+                  <Input disabled={isLoading} type={'password'} placeholder={'Ваш пароль'} className={''} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,7 +76,7 @@ const LoginForm = () => {
 
           <div className={'w-full flex items-end justify-center gap-4'}>
             <Button type={'submit'} disabled={form.formState.isSubmitting} className={'w-[60%]'}>
-              {form.formState.isSubmitting || loading ? <Loader /> : 'Увійти'}
+              {isLoading ? <Loader /> : 'Увійти'}
             </Button>
           </div>
         </form>

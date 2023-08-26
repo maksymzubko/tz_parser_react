@@ -1,40 +1,20 @@
 import './App.css';
 import { useRoutes } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { routes } from './router.tsx';
-import { useDispatch } from 'react-redux';
-import { setAuthorized } from '@/redux/store/user/slice.ts';
 import Cookies from 'js-cookie';
-import authApi from '@/api/auth/auth.api.ts';
 import TopBar from '@/components/shared/TopBar.tsx';
 import Footer from '@/components/shared/Footer.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { Toaster } from '@/components/ui/toaster.tsx';
 import Loader from '@/components/ui/Loader.tsx';
+import { useVerifyTokenQuery } from '@/redux/api/authApi.ts';
 
 function App() {
   const toTopBtn = useRef<HTMLButtonElement>();
 
-  const [loading, setLoading] = useState(true);
+  const { isLoading } = useVerifyTokenQuery('', { skip: !Cookies.get('access_token_tz_demo') });
   const route = useRoutes(routes);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    setLoading(true);
-    const token = Cookies.get('access_token_tz_demo');
-    if (token) {
-      authApi
-        .verifyToken()
-        .then(() => {
-          dispatch(setAuthorized({ isAuthorized: true }));
-        })
-        .catch(() => {
-          dispatch(setAuthorized({ isAuthorized: false }));
-        })
-        .finally(() => setLoading(false));
-    }
-    else setLoading(false)
-  }, [dispatch]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -62,12 +42,12 @@ function App() {
   return (
     <div className={'dark:bg-dark-3 h-auto w-full text-black dark:text-light-1'}>
       <TopBar />
-      {loading && (
+      {isLoading && (
         <span className={'fixed left-0 top-0 w-full h-full flex items-center justify-center'}>
           <Loader />
         </span>
       )}
-      {!loading && route}
+      {!isLoading && route}
       <Button
         ref={toTopBtn}
         id="to-top-button"
