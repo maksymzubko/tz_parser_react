@@ -18,8 +18,7 @@ const ArticleCard = ({ article }: Props) => {
     <div
       className={
         'card_article self-start w-full flex justify-between 2xl:items-start items-center flex-col md:w-[45%] gap-4 p-4 bg-light-2 dark:bg-dark-3 rounded-2xl mx-3'
-      }
-    >
+      }>
       {convertDateToString(article.date)}
       <div className={'flex 2xl:flex-row flex-col justify-center items-center 2xl:items-start gap-4'}>
         <img src={article.image ?? NoImg} className={'w-[300px] h-full object-cover'} alt={'image'} />
@@ -32,8 +31,7 @@ const ArticleCard = ({ article }: Props) => {
           <Badge
             variant="outline"
             className={'dark:bg-dark-4 bg-gray-200 border-dark-3 text-dark-4 dark:text-light-1'}
-            key={`badge-articles-landing-${c}`}
-          >
+            key={`badge-articles-landing-${c}`}>
             {c}
           </Badge>
         ))}
@@ -41,8 +39,7 @@ const ArticleCard = ({ article }: Props) => {
 
       <Button
         className={'w-[200px]'}
-        onClick={() => navigate(`${links.article}${article.id}`, { state: { id: article.id } })}
-      >
+        onClick={() => navigate(`${links.article}${article.id}`, { state: { id: article.id } })}>
         Читати
       </Button>
     </div>

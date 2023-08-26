@@ -202,8 +202,7 @@ const ArticleForm = ({ initialData }: Props) => {
                         disabled={isLoadingAdd || isLoadingUpdate}
                         className={'w-[15%]'}
                         type={'button'}
-                        onClick={onAddCategory}
-                      >
+                        onClick={onAddCategory}>
                         Додати
                       </Button>
                     </div>
@@ -213,8 +212,7 @@ const ArticleForm = ({ initialData }: Props) => {
                 <div
                   className={`flex justify-start items-center flex-wrap gap-4 ${
                     isLoadingAdd || isLoadingUpdate ? 'pointer-events-none' : 'pointer-events-auto'
-                  }`}
-                >
+                  }`}>
                   {categories.map((c) => (
                     <CategoryCard key={`category-card-${c}`} name={c} onDelete={() => onDelete(c)} />
                   ))}

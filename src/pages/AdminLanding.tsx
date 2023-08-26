@@ -69,8 +69,7 @@ const AdminLanding = () => {
       <section
         className={`${
           isLoading ? 'invisible' : 'visible'
-        } transition ease-in flex flex-wrap gap-4 w-full justify-center`}
-      >
+        } transition ease-in flex flex-wrap gap-4 w-full justify-center`}>
         {articles?.data?.length > 0 ? (
           <DataTable data={articles.data} />
         ) : (
