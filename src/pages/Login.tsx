@@ -12,8 +12,9 @@ const Login = () => {
 
   return (
     <div
-      className={'fixed translate-x-[-50%] translate-y-[-50%] top-1/2 left-1/2 w-full flex items-center justify-center'}
-    >
+      className={
+        'fixed translate-x-[-50%] translate-y-[-50%] top-1/2 left-1/2 w-full flex items-center justify-center'
+      }>
       <LoginForm />
     </div>
   );

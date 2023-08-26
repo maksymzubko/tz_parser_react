@@ -79,8 +79,7 @@ const SearchBar = ({ onChange }: Props) => {
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={form.getValues().sortBy}
-                      className={'flex items-center justify-evenly'}
-                    >
+                      className={'flex items-center justify-evenly'}>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="DESC" id="DESC" />
                         <Label htmlFor="option-two">Спочатку нові</Label>

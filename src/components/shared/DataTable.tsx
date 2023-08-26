@@ -52,8 +52,7 @@ const DataTable = ({ data }: Props) => {
       <div className={'flex w-full items-center justify-end mb-4'}>
         <Button
           onClick={() => navigate(links.create)}
-          className={'text-body-medium font-medium flex gap-2 dark:text-dark-3 text-light-1'}
-        >
+          className={'text-body-medium font-medium flex gap-2 dark:text-dark-3 text-light-1'}>
           <PlusIcon size={20} /> Створити
         </Button>
       </div>
@@ -89,8 +88,7 @@ const DataTable = ({ data }: Props) => {
               <tr key={d.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                 <th
                   scope="row"
-                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white w-[100px]"
-                >
+                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white w-[100px]">
                   {d.id}
                 </th>
                 <td className="px-6 py-4 w-[240px]">
@@ -100,15 +98,13 @@ const DataTable = ({ data }: Props) => {
                 <td
                   className={
                     'text-ellipsis whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[100px] px-6 py-4'
-                  }
-                >
+                  }>
                   {d.title}
                 </td>
                 <td
                   className={
                     'text-ellipsis whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[100px] px-6 py-4'
-                  }
-                >
+                  }>
                   {d.content}
                 </td>
                 <td className="px-6 py-4 w-[240px]">
@@ -130,8 +126,7 @@ const DataTable = ({ data }: Props) => {
                       onSubmit={() => onDelete(d.id)}
                       isActionLoading={isLoading}
                       btnCancelName={'Відмінити'}
-                      btnActionName={'Видалити'}
-                    >
+                      btnActionName={'Видалити'}>
                       <TrashIcon size={30} />
                     </YesNoDialog>
                   </div>
@@ -143,8 +138,7 @@ const DataTable = ({ data }: Props) => {
               <th
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                colSpan={7}
-              >
+                colSpan={7}>
                 Нічого не знайдено!
               </th>
             </tr>

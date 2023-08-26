@@ -39,7 +39,7 @@ const Landing = () => {
 
   const onChange = (_options: PageOptions) => {
     setOptions((prev) => {
-      return { ...prev, ..._options };
+      return { ...prev, page: 1, ..._options };
     });
   };
 
@@ -70,8 +70,7 @@ const Landing = () => {
       <section
         className={`${
           isLoading ? 'invisible' : 'visible'
-        } transition ease-in flex flex-wrap gap-4 w-full justify-between px-16`}
-      >
+        } transition ease-in flex flex-wrap gap-4 w-full justify-between px-16`}>
         {data?.data.length > 0 ? (
           data.data.map((a) => <ArticleCard key={`article-card-${uuidv4()}`} article={a} />)
         ) : (

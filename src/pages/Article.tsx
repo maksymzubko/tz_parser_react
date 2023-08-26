@@ -42,8 +42,7 @@ const Article = () => {
       <div
         className={
           'card_article w-full flex justify-between 2xl:items-start items-center flex-col gap-4 p-4 bg-light-2 dark:bg-dark-3 mb-10'
-        }
-      >
+        }>
         <Button onClick={() => navigate(links.landing)} className={'flex gap-4 items-center mb-5'}>
           <Home /> На головну
         </Button>
@@ -60,8 +59,7 @@ const Article = () => {
                 <Badge
                   key={`badge-article-${c}`}
                   variant="outline"
-                  className={'dark:bg-dark-4 bg-gray-200 border-[1px] border-dark-3 text-dark-4 dark:text-light-1'}
-                >
+                  className={'dark:bg-dark-4 bg-gray-200 border-[1px] border-dark-3 text-dark-4 dark:text-light-1'}>
                   {c}
                 </Badge>
               ))}
@@ -75,8 +73,7 @@ const Article = () => {
               dangerouslySetInnerHTML={{ __html: fixLinks(article.content) }}
               className={
                 'w-[100%] md:w-[80%] mt-5 text-body-medium whitespace-pre-wrap [&_p]:mb-4 [&_p]:flex [&_p]:flex-col [&_p]:items-center'
-              }
-            ></div>
+              }></div>
           </div>
         </div>
       </div>
