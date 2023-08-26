@@ -5,9 +5,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArticleOptionsValidation } from '@/lib/validations/options.ts';
 import * as zod from 'zod';
-import { Order, PageOptions } from '@/api/articles/types.ts';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group.tsx';
 import { Label } from '@/components/ui/label.tsx';
+import { Order, PageOptions } from '@/redux/api/types/article.types.ts';
 
 interface Props {
   onChange: (_option: PageOptions) => void;

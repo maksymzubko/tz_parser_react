@@ -1,61 +1,59 @@
-import React, { useState } from 'react';
-import { Article } from '@/api/articles/types.ts';
+import React from 'react';
 import { convertDateToString } from '@/lib/utils.ts';
 import { EditIcon, PlusIcon, TrashIcon, ViewIcon } from 'lucide-react';
 import NoImg from '@/assets/no-img.png';
 import { useNavigate } from 'react-router-dom';
 import { links } from '@/router.tsx';
 import YesNoDialog from '@/components/ui/yes-no-dialog.tsx';
-import articlesApi from '@/api/articles/articles.api.ts';
 import { useToast } from '@/components/ui/use-toast.ts';
 import { AxiosError } from 'axios';
 import { Button } from '@/components/ui/button.tsx';
+import { useDeleteArticleMutation } from '@/redux/api/articleApi.ts';
+import { Article } from '@/redux/api/types/article.types.ts';
 
 interface Props {
   data: Article[];
-  onDeleted: (id: number) => void;
 }
 
-const DataTable = ({ data, onDeleted }: Props) => {
+const DataTable = ({ data }: Props) => {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [deleteArticle, { isLoading }] = useDeleteArticleMutation();
 
-  const onDelete = (id: number) => {
-    setLoading(true);
-    articlesApi
-      .deleteArticle(id)
-      .then(() => {
-        onDeleted(id);
+  const onDelete = async (id: number) => {
+    try {
+      await deleteArticle(id.toString()).unwrap();
+      toast({
+        title: `Пост #${id} видалено.`,
+        duration: 1500
+      });
+    } catch (error) {
+      const err = error as AxiosError<{ errors: string[] | undefined }>;
+      if (err.response && err.response.data.errors) {
         toast({
-          title: `Пост #${id} видалено.`,
-          duration: 1500
+          title: 'Помилка :(',
+          description: err.response.data.errors.at(0) ?? '',
+          duration: 1500,
+          variant: 'destructive'
         });
-      })
-      .catch((err: AxiosError<{ errors: string[] | undefined }>) => {
-        if (err.response && err.response.data.errors) {
-          toast({
-            title: 'Помилка :(',
-            description: err.response.data.errors.at(0) ?? '',
-            duration: 1500,
-            variant: 'destructive'
-          });
-        } else {
-          toast({
-            title: 'Помилка :(',
-            description: 'Щось пішло не так, спробуйте ще!',
-            duration: 1500,
-            variant: 'destructive'
-          });
-        }
-      })
-      .finally(() => setLoading(false));
+      } else {
+        toast({
+          title: 'Помилка :(',
+          description: 'Щось пішло не так, спробуйте ще!',
+          duration: 1500,
+          variant: 'destructive'
+        });
+      }
+    }
   };
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-[90%]">
       <div className={'flex w-full items-center justify-end mb-4'}>
-        <Button onClick={() => navigate(links.create)} className={'text-body-medium font-medium flex gap-2 dark:text-dark-3 text-light-1'}>
+        <Button
+          onClick={() => navigate(links.create)}
+          className={'text-body-medium font-medium flex gap-2 dark:text-dark-3 text-light-1'}
+        >
           <PlusIcon size={20} /> Створити
         </Button>
       </div>
@@ -130,7 +128,7 @@ const DataTable = ({ data, onDeleted }: Props) => {
                       }
                       title={'Ви впевнені?'}
                       onSubmit={() => onDelete(d.id)}
-                      isActionLoading={loading}
+                      isActionLoading={isLoading}
                       btnCancelName={'Відмінити'}
                       btnActionName={'Видалити'}
                     >
